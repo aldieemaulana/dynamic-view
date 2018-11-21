@@ -16,35 +16,47 @@ public class MainActivity extends AppCompatActivity {
 
     private int presCounter = 0;
     private int maxPresCounter = 0;
-    private String[] keys = {"D", "O", "T", "G"};
-    private String textAnswer = "DOG";
+    private char[] keys;
+    private String textAnswer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        keys = shuffleArray(keys);
-
-        for (String key : keys) {
-            addButton(((LinearLayout) findViewById(R.id.layoutButton)), key, ((EditText) findViewById(R.id.editText)));
-        }
-
-        for (int i=0;i<textAnswer.length();i++) {
-            addEditText(((LinearLayout) findViewById(R.id.layoutEdiText)), i);
-        }
-
-        maxPresCounter = textAnswer.length();
+        setQuestion("Kodok");
 
     }
 
-    private String[] shuffleArray(String[] ar)
+    private void setQuestion(String answer) {
+        LinearLayout linearLayout = findViewById(R.id.layoutButton);
+        LinearLayout linearLayoutEdit = findViewById(R.id.layoutEdiText);
+
+        linearLayout.removeAllViews();
+        linearLayoutEdit.removeAllViews();
+
+        textAnswer = answer.toUpperCase();
+
+        maxPresCounter = textAnswer.length();
+        keys = textAnswer.toCharArray();
+        keys = shuffleArray(keys);
+
+        for (char key : keys) {
+            addButton(linearLayout, key, ((EditText) findViewById(R.id.editText)));
+        }
+
+        for (int i=0;i<textAnswer.length();i++) {
+            addEditText(linearLayoutEdit, i);
+        }
+    }
+
+    private char[] shuffleArray(char[] ar)
     {
         Random rnd = new Random();
         for (int i = ar.length - 1; i > 0; i--)
         {
             int index = rnd.nextInt(i + 1);
-            String a = ar[index];
+            char a = ar[index];
             ar[index] = ar[i];
             ar[i] = a;
         }
@@ -52,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
         return ar;
     }
 
-    private void addButton(LinearLayout viewParent, final String text, final EditText editText) {
+    private void addButton(LinearLayout viewParent, final char text, final EditText editText) {
         LinearLayout.LayoutParams linearLayoutLayoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT);
 
@@ -71,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
 
         textView.setTextColor(this.getResources().getColor(R.color.colorWhite));
         textView.setGravity(Gravity.CENTER);
-        textView.setText(text);
+        textView.setText(String.valueOf(text));
         textView.setClickable(true);
         textView.setFocusable(true);
         textView.setTextSize(18);
@@ -85,10 +97,10 @@ public class MainActivity extends AppCompatActivity {
                 if (presCounter == 0)
                     editText.setText("");
 
-                editText.setText(editText.getText().toString() + text);
+                editText.setText(editText.getText().toString() + String.valueOf(text));
                 textView.setEnabled(false);
 
-                ((TextView)findViewById(presCounter)).setText(text);
+                ((TextView)findViewById(presCounter)).setText(String.valueOf(text));
 
                 presCounter++;
 
@@ -136,26 +148,14 @@ public class MainActivity extends AppCompatActivity {
 
         EditText editText = findViewById(R.id.editText);
         TextView textResult = findViewById(R.id.textResult);
-        LinearLayout linearLayout = findViewById(R.id.layoutButton);
-        LinearLayout linearLayoutEdit = findViewById(R.id.layoutEdiText);
 
         if(editText.getText().toString().equals(textAnswer)) {
             textResult.setText("Betul sekali!");
+            setQuestion("Kucing");
         }else{
             textResult.setText("Salah coy!");
             editText.setText("");
         }
 
-        keys = shuffleArray(keys);
-
-        linearLayoutEdit.removeAllViews();
-        for (int i=0;i<textAnswer.length();i++) {
-            addEditText(((LinearLayout) findViewById(R.id.layoutEdiText)), i);
-        }
-
-        linearLayout.removeAllViews();
-        for (String key : keys) {
-            addButton(linearLayout, key, editText);
-        }
     }
 }
