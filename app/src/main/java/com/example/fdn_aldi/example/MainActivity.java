@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        setQuestion("Kodok");
+        setQuestion("Dog");
 
     }
 
@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
         textAnswer = answer.toUpperCase();
 
         maxPresCounter = textAnswer.length();
-        keys = textAnswer.toCharArray();
+        keys = (textAnswer + (char)(new Random().nextInt(25) + 'A') + (char)(new Random().nextInt(25) + 'A')).toUpperCase().toCharArray();
         keys = shuffleArray(keys);
 
         for (char key : keys) {
@@ -151,7 +151,7 @@ public class MainActivity extends AppCompatActivity {
 
         if(editText.getText().toString().equals(textAnswer)) {
             textResult.setText("Betul sekali!");
-            setQuestion("Kucing");
+            setQuestion("Cat");
         }else{
             textResult.setText("Salah coy!");
             editText.setText("");
