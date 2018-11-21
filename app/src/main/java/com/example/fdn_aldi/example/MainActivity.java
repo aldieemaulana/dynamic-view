@@ -155,6 +155,7 @@ public class MainActivity extends AppCompatActivity {
         }else{
             textResult.setText("Salah coy!");
             editText.setText("");
+            setQuestion("Dog");
         }
 
     }
