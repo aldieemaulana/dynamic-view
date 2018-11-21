@@ -1,29 +1,23 @@
 package com.example.fdn_aldi.example;
 
 import android.annotation.SuppressLint;
-import android.graphics.Color;
 import android.os.Build;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
 
     private int presCounter = 0;
-    private int maxPresCounter = 3;
-    private String[] keys = {"A", "C", "T", "D"};
-    private String textAnswer = "CAT";
+    private int maxPresCounter = 0;
+    private String[] keys = {"D", "O", "T", "G"};
+    private String textAnswer = "DOG";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,10 +27,14 @@ public class MainActivity extends AppCompatActivity {
         keys = shuffleArray(keys);
 
         for (String key : keys) {
-            addView(((LinearLayout) findViewById(R.id.layoutParent)), key, ((EditText) findViewById(R.id.editText)));
+            addButton(((LinearLayout) findViewById(R.id.layoutButton)), key, ((EditText) findViewById(R.id.editText)));
         }
 
-        maxPresCounter = 3;
+        for (int i=0;i<textAnswer.length();i++) {
+            addEditText(((LinearLayout) findViewById(R.id.layoutEdiText)), i);
+        }
+
+        maxPresCounter = textAnswer.length();
 
     }
 
@@ -54,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
         return ar;
     }
 
-    private void addView(LinearLayout viewParent, final String text, final EditText editText) {
+    private void addButton(LinearLayout viewParent, final String text, final EditText editText) {
         LinearLayout.LayoutParams linearLayoutLayoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT);
 
@@ -83,20 +81,52 @@ public class MainActivity extends AppCompatActivity {
             @SuppressLint("SetTextI18n")
             @Override
             public void onClick(View v) {
-                if(presCounter < maxPresCounter) {
-                    if (presCounter == 0)
-                        editText.setText("");
+            if(presCounter < maxPresCounter) {
+                if (presCounter == 0)
+                    editText.setText("");
 
-                    editText.setText(editText.getText().toString() + text);
-                    textView.setEnabled(false);
-                    presCounter++;
+                editText.setText(editText.getText().toString() + text);
+                textView.setEnabled(false);
 
-                    if(presCounter == maxPresCounter)
-                        doValidate();
-                }
+                ((TextView)findViewById(presCounter)).setText(text);
+
+                presCounter++;
+
+                if(presCounter == maxPresCounter)
+                    doValidate();
+            }
             }
 
         });
+
+        viewParent.addView(textView);
+    }
+
+
+    private void addEditText(LinearLayout viewParent, int id) {
+        LinearLayout.LayoutParams linearLayoutLayoutParams = new LinearLayout.LayoutParams(150,
+                LinearLayout.LayoutParams.WRAP_CONTENT);
+
+        linearLayoutLayoutParams.rightMargin = 10;
+        linearLayoutLayoutParams.leftMargin = 10;
+
+        final TextView textView = new TextView(this);
+
+        textView.setLayoutParams(linearLayoutLayoutParams);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            textView.setBackground(this.getResources().getDrawable(R.drawable.shape_edit));
+        }else{
+            textView.setBackgroundDrawable(this.getResources().getDrawable(R.drawable.shape_edit));
+        }
+
+        textView.setTextColor(this.getResources().getColor(R.color.colorBlack));
+        textView.setGravity(Gravity.CENTER);
+        textView.setClickable(true);
+        textView.setFocusable(true);
+        textView.setText(" ");
+        textView.setTextSize(22);
+        textView.setId(id);
 
         viewParent.addView(textView);
     }
@@ -105,18 +135,27 @@ public class MainActivity extends AppCompatActivity {
         presCounter = 0;
 
         EditText editText = findViewById(R.id.editText);
-        LinearLayout linearLayout = findViewById(R.id.layoutParent);
+        TextView textResult = findViewById(R.id.textResult);
+        LinearLayout linearLayout = findViewById(R.id.layoutButton);
+        LinearLayout linearLayoutEdit = findViewById(R.id.layoutEdiText);
 
         if(editText.getText().toString().equals(textAnswer)) {
-            editText.setText("Done!");
+            textResult.setText("Betul sekali!");
         }else{
+            textResult.setText("Salah coy!");
             editText.setText("");
         }
 
         keys = shuffleArray(keys);
+
+        linearLayoutEdit.removeAllViews();
+        for (int i=0;i<textAnswer.length();i++) {
+            addEditText(((LinearLayout) findViewById(R.id.layoutEdiText)), i);
+        }
+
         linearLayout.removeAllViews();
         for (String key : keys) {
-            addView(linearLayout, key, editText);
+            addButton(linearLayout, key, editText);
         }
     }
 }
