@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -15,15 +16,18 @@ import java.util.Random;
 public class MainActivity extends AppCompatActivity {
 
     private int presCounter = 0;
+    private int lifeCounter = 3;
     private int maxPresCounter = 0;
     private char[] keys;
     private String textAnswer;
+    private int[] life = new int[3];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        life = new int[] {R.id.life1, R.id.life2, R.id.life3};
         setQuestion("Dog");
 
     }
@@ -94,18 +98,20 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
             if(presCounter < maxPresCounter) {
-                if (presCounter == 0)
+                if (presCounter == 0) {
                     editText.setText("");
+                }
 
                 editText.setText(editText.getText().toString() + String.valueOf(text));
                 textView.setEnabled(false);
 
                 ((TextView)findViewById(presCounter)).setText(String.valueOf(text));
 
-                presCounter++;
+                ++presCounter;
 
-                if(presCounter == maxPresCounter)
+                if(presCounter == maxPresCounter) {
                     doValidate();
+                }
             }
             }
 
@@ -155,8 +161,25 @@ public class MainActivity extends AppCompatActivity {
         }else{
             textResult.setText("Salah coy!");
             editText.setText("");
-            setQuestion("Dog");
+
+            --lifeCounter;
+            findViewById(life[lifeCounter]).setVisibility(View.GONE);
+
+            if(lifeCounter == 0) {
+                textResult.setText("Mati coy!");
+                doReset();
+            }else{
+                setQuestion("Dog");
+            }
         }
 
+    }
+
+    private void doReset() {
+        lifeCounter = 3;
+        setQuestion("Cat");
+        for (int i: life) {
+            findViewById(i).setVisibility(View.VISIBLE);
+        }
     }
 }
