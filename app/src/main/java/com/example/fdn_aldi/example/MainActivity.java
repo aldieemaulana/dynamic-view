@@ -20,15 +20,14 @@ public class MainActivity extends AppCompatActivity {
     private int maxPresCounter = 0;
     private char[] keys;
     private String textAnswer;
-    private int[] life = new int[3];
+    private int[] life = new int[] {R.id.life1, R.id.life2, R.id.life3};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        life = new int[] {R.id.life1, R.id.life2, R.id.life3};
         setQuestion("Dog");
+
 
     }
 
@@ -177,7 +176,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void doReset() {
         lifeCounter = 3;
-        setQuestion("Cat");
+        setQuestion("Dog");
+
         for (int i: life) {
             findViewById(i).setVisibility(View.VISIBLE);
         }
